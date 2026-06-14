@@ -102,4 +102,23 @@ public class Transaction {
     public String getDescription() {
         return description;
     }
+
+    /**
+     * Returns a readable multi-line representation of this transaction.
+     *
+     * @return a formatted string containing all transaction fields
+     */
+    @Override
+    public String toString() {
+        return "ID: " + id + "\nTransaction Type: " + type + "\nCategory: " + category + "\nAmount: " + amount + "\nDate: " + date + "\nDescription: " + description;
+    }
+
+    /**
+     * Serializes this transaction to a CSV row.
+     *
+     * @return a comma-separated representation of this transaction
+     */
+    public String toCSV() {
+        return id + "," + type + "," + category + "," + amount + "," + date + "," + description;
+    }
 }
