@@ -1,7 +1,7 @@
 package com.finance.model;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
@@ -12,7 +12,7 @@ public class Transaction {
     private final TransactionType type;
     private final Category category;
     private final BigDecimal amount;
-    private final LocalDate date;
+    private final LocalDateTime dateTime;
     private final String description;
 
     /**
@@ -22,12 +22,13 @@ public class Transaction {
      * @param type        the transaction type
      * @param category    the transaction category
      * @param amount      the transaction amount
-     * @param date        the transaction date
+     * @param dateTime    the transaction date time
      * @param description a short description of the transaction
      * @throws IllegalArgumentException if any argument is null, if amount is not positive,
-     *                                  or if description is blank
+     *                                  if description is blank, or if description contains
+     *                                  newline characters
      */
-    public Transaction(UUID id, TransactionType type, Category category, BigDecimal amount, LocalDate date, String description) {
+    public Transaction(UUID id, TransactionType type, Category category, BigDecimal amount, LocalDateTime dateTime, String description) {
         if (id == null) {
             throw new IllegalArgumentException("id cannot be null");
         }
@@ -43,8 +44,8 @@ public class Transaction {
         if (amount.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("amount must be positive");
         }
-        if (date == null) {
-            throw new IllegalArgumentException("date cannot be null");
+        if (dateTime == null) {
+            throw new IllegalArgumentException("date time cannot be null");
         }
         if (description == null) {
             throw new IllegalArgumentException("description cannot be null");
@@ -52,12 +53,15 @@ public class Transaction {
         if (description.isBlank()) {
             throw new IllegalArgumentException("description cannot be blank");
         }
+        if (description.contains("\n") || description.contains("\r")) {
+            throw new IllegalArgumentException("description cannot contain newline characters");
+        }
 
         this.id = id;
         this.type = type;
         this.category = category;
         this.amount = amount;
-        this.date = date;
+        this.dateTime = dateTime;
         this.description = description;
     }
 
@@ -90,10 +94,10 @@ public class Transaction {
     }
 
     /**
-     * Returns the transaction date.
+     * Returns the transaction date time.
      */
-    public LocalDate getDate() {
-        return date;
+    public LocalDateTime getDateTime() {
+        return dateTime;
     }
 
     /**
@@ -110,7 +114,7 @@ public class Transaction {
      */
     @Override
     public String toString() {
-        return "ID: " + id + "\nTransaction Type: " + type + "\nCategory: " + category + "\nAmount: " + amount + "\nDate: " + date + "\nDescription: " + description;
+        return "ID: " + id + "\nTransaction Type: " + type + "\nCategory: " + category + "\nAmount: " + amount + "\nDateTime: " + dateTime + "\nDescription: " + description;
     }
 
     /**
@@ -119,6 +123,6 @@ public class Transaction {
      * @return a comma-separated representation of this transaction
      */
     public String toCSV() {
-        return id + "," + type + "," + category + "," + amount + "," + date + "," + description;
+        return id + "," + type + "," + category + "," + amount + "," + dateTime + "," + description;
     }
 }
