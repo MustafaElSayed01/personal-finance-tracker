@@ -10,7 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -70,11 +70,11 @@ public class TransactionRepository {
      */
     private Transaction parseTransaction(String line) {
         if (line == null || line.isBlank()) {
-            throw new IllegalArgumentException("line cannot be null");
+            throw new IllegalArgumentException("line cannot be null or blank");
         }
-        String[] lineArray = line.split(",");
+        String[] lineArray = line.split(",", 6);
         BigDecimal amount = new BigDecimal(lineArray[3]);
-        return new Transaction(UUID.fromString(lineArray[0]), TransactionType.valueOf(lineArray[1]), Category.valueOf(lineArray[2]), amount, LocalDate.parse(lineArray[4]), lineArray[5]);
+        return new Transaction(UUID.fromString(lineArray[0]), TransactionType.valueOf(lineArray[1]), Category.valueOf(lineArray[2]), amount, LocalDateTime.parse(lineArray[4]), lineArray[5]);
     }
 
     /**
