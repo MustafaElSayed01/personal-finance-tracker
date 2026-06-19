@@ -1,5 +1,7 @@
 package com.finance.model;
 
+import com.finance.util.ValidationUtils;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -29,30 +31,12 @@ public class Transaction {
      *                                  newline characters
      */
     public Transaction(UUID id, TransactionType type, Category category, BigDecimal amount, LocalDateTime dateTime, String description) {
-        if (id == null) {
-            throw new IllegalArgumentException("id cannot be null");
-        }
-        if (type == null) {
-            throw new IllegalArgumentException("type cannot be null");
-        }
-        if (category == null) {
-            throw new IllegalArgumentException("category cannot be null");
-        }
-        if (amount == null) {
-            throw new IllegalArgumentException("amount cannot be null");
-        }
-        if (amount.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("amount must be positive");
-        }
-        if (dateTime == null) {
-            throw new IllegalArgumentException("date time cannot be null");
-        }
-        if (description == null) {
-            throw new IllegalArgumentException("description cannot be null");
-        }
-        if (description.isBlank()) {
-            throw new IllegalArgumentException("description cannot be blank");
-        }
+        ValidationUtils.requireNonNull(id, "id");
+        ValidationUtils.requireNonNull(type, "type");
+        ValidationUtils.requireNonNull(category, "category");
+        ValidationUtils.requirePositive(amount, "amount");
+        ValidationUtils.requireNonNull(dateTime, "dateTime");
+        ValidationUtils.requireNotBlank(description, "description");
         if (description.contains("\n") || description.contains("\r")) {
             throw new IllegalArgumentException("description cannot contain newline characters");
         }
