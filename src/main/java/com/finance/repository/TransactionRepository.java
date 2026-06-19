@@ -3,6 +3,7 @@ package com.finance.repository;
 import com.finance.model.Category;
 import com.finance.model.Transaction;
 import com.finance.model.TransactionType;
+import com.finance.util.ValidationUtils;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -29,12 +30,7 @@ public class TransactionRepository {
      * @throws IllegalArgumentException if fileName is null or blank
      */
     public TransactionRepository(String fileName) {
-        if (fileName == null) {
-            throw new IllegalArgumentException("fileName cannot be null");
-        }
-        if (fileName.trim().isEmpty()) {
-            throw new IllegalArgumentException("fileName cannot be blank");
-        }
+        ValidationUtils.requireNotBlank(fileName, "fileName");
         this.transactions = new ArrayList<>();
         this.fileName = fileName;
     }
@@ -55,9 +51,7 @@ public class TransactionRepository {
      * @throws IllegalArgumentException if transaction is null
      */
     public void add(Transaction transaction) {
-        if (transaction == null) {
-            throw new IllegalArgumentException("transaction cannot be null");
-        }
+        ValidationUtils.requireNonNull(transaction, "transaction");
         transactions.add(transaction);
     }
 
@@ -69,9 +63,7 @@ public class TransactionRepository {
      * @throws IllegalArgumentException if the line is null, blank, or malformed
      */
     private Transaction parseTransaction(String line) {
-        if (line == null || line.isBlank()) {
-            throw new IllegalArgumentException("line cannot be null or blank");
-        }
+        ValidationUtils.requireNotBlank(line, "line");
         String[] lineArray = line.split(",", 6);
         BigDecimal amount = new BigDecimal(lineArray[3]);
         return new Transaction(UUID.fromString(lineArray[0]), TransactionType.valueOf(lineArray[1]), Category.valueOf(lineArray[2]), amount, LocalDateTime.parse(lineArray[4]), lineArray[5]);
