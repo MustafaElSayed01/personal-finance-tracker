@@ -55,13 +55,6 @@ public class TransactionRepository {
         transactions.add(transaction);
     }
 
-    /**
-     * Parses a single CSV row into a {@link Transaction}.
-     *
-     * @param line the CSV line to parse
-     * @return the parsed transaction
-     * @throws IllegalArgumentException if the line is null, blank, or malformed
-     */
     private Transaction parseTransaction(String line) {
         ValidationUtils.requireNotBlank(line, "line");
         String[] lineArray = line.split(",", 6);
@@ -95,6 +88,7 @@ public class TransactionRepository {
         Path path = Paths.get(fileName);
         try (var writer = Files.newBufferedWriter(path, StandardCharsets.UTF_8)) {
             writer.write("id,type,category,amount,date,description\n");
+
             for (Transaction transaction : transactions) {
                 writer.append(transaction.toCSV()).append("\n");
             }

@@ -6,6 +6,7 @@ import com.finance.model.TransactionType;
 import com.finance.repository.TransactionRepository;
 import com.finance.util.ValidationUtils;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
@@ -31,11 +32,14 @@ public class FinanceService {
     }
 
     /**
-     * Checks whether the given transaction already exists in the repository.
+     * Returns all transactions currently stored in the repository.
      *
-     * @param transaction the transaction to compare
-     * @return {@code true} if an equal transaction is already stored, otherwise {@code false}
+     * @return the current transaction snapshot
      */
+    public List<Transaction> getTransactions() {
+        return transactionRepository.getTransactions();
+    }
+
     private boolean isDuplicate(Transaction transaction) {
         return transactionRepository.getTransactions().stream().anyMatch(t -> t.getType().equals(transaction.getType()) && t.getCategory().equals(transaction.getCategory()) && t.getAmount().compareTo(transaction.getAmount()) == 0 && t.getDateTime().equals(transaction.getDateTime()));
     }
@@ -64,7 +68,7 @@ public class FinanceService {
      * Returns all transactions whose date/time falls within the inclusive range.
      *
      * @param start the inclusive lower bound
-     * @param end the inclusive upper bound
+     * @param end   the inclusive upper bound
      * @return the matching transactions ordered as stored in the repository
      * @throws IllegalArgumentException if either argument is null or if {@code start} is after {@code end}
      */
@@ -121,5 +125,23 @@ public class FinanceService {
         return transactionRepository.getTransactions().stream()
                 .filter(t -> t.getDescription().toLowerCase(Locale.ROOT).contains(description.toLowerCase(Locale.ROOT)))
                 .toList();
+    }
+
+    /**
+     * Loads transactions from the repository's CSV file into memory.
+     *
+     * @throws IOException if reading the CSV file fails
+     */
+    public void loadFromCsv() throws IOException {
+        transactionRepository.loadFromCsv();
+    }
+
+    /**
+     * Saves the current in-memory transactions to the repository's CSV file.
+     *
+     * @throws IOException if writing the CSV file fails
+     */
+    public void saveToCsv() throws IOException {
+            transactionRepository.saveToCsv();
     }
 }

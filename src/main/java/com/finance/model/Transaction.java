@@ -4,6 +4,7 @@ import com.finance.util.ValidationUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 /**
@@ -14,6 +15,7 @@ public class Transaction {
     private final TransactionType type;
     private final Category category;
     private final BigDecimal amount;
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
     private final LocalDateTime dateTime;
     private final String description;
 
@@ -98,7 +100,7 @@ public class Transaction {
      */
     @Override
     public String toString() {
-        return "ID: " + id + "\nTransaction Type: " + type + "\nCategory: " + category + "\nAmount: " + amount + "\nDateTime: " + dateTime + "\nDescription: " + description;
+        return "ID: " + id + "\nTransaction Type: " + type + "\nCategory: " + category + "\nAmount: " + amount + "\nDateTime: " + dateTime.format(FORMATTER) + "\nDescription: " + description;
     }
 
     /**
@@ -107,6 +109,6 @@ public class Transaction {
      * @return a comma-separated representation of this transaction
      */
     public String toCSV() {
-        return id + "," + type + "," + category + "," + amount + "," + dateTime + "," + description;
+        return id + "," + type + "," + category + "," + amount + "," + dateTime.format(FORMATTER) + "," + description;
     }
 }
